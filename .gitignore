@@ -1,0 +1,12 @@
+# Environment
+.env
+
+# Dependencies
+/vendor/
+
+# Tests
+# Coverage
+coverage.xml
+coverage/
+# PHPUnit
+.phpunit.*

@@ -1,0 +1,26 @@
+{
+    "name": "nicolacostantino/simple-framework",
+    "description": "A very simple & small PHP Framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nicola Costantino",
+            "homepage": "https://nicolacostantino.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "classmap": [
+            "./"
+        ]
+    },
+    "require": {
+        "vlucas/phpdotenv": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.2",
+        "filp/whoops": "^2.4",
+        "mockery/mockery": "^1.2"
+    }
+}
