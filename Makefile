@@ -25,3 +25,22 @@ test: autoload
 
 server_dev:
 	php -S $(LOCAL_HOST):$(LOCAL_PORT) $(APP_ENTRYPOINT)
+
+
+### Travis CI ###
+
+travis_before_install:
+	composer self-update
+	composer global require hirak/prestissimo
+	# Setup env file
+	cp .env.test .env
+
+travis_install:
+	composer install --prefer-dist --no-interaction
+
+travis_test_cov:
+	vendor/bin/phpunit --coverage-clover=coverage.xml
+
+travis_codecov: SHELL:=/bin/bash
+travis_codecov:
+	bash <(curl -s https://codecov.io/bash)

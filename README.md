@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/NicolaCostantino/DejaVu.svg?branch=master)](https://travis-ci.com/NicolaCostantino/DejaVu)
+[![codecov](https://codecov.io/gh/NicolaCostantino/DejaVu/branch/master/graph/badge.svg)](https://codecov.io/gh/NicolaCostantino/DejaVu)
+
 # DejaVu
 
 A simple slim web framework.
