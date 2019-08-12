@@ -15,6 +15,7 @@ if (getenv('APP_DEBUG')) {
     $whoops->register();
 }
 
+// Load configurations
 $config = require_once __DIR__.'/config.php';
 
 // Create dependencies for the application
