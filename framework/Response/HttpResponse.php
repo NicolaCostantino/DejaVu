@@ -10,6 +10,11 @@ class HttpResponse implements ResponseInterface
     protected $status_code = '';
     protected $content = '';
 
+    public function __construct($content='')
+    {
+        $this->setContent($content);
+    }
+
     public function setStatusCode(String $status_code) : void
     {
         $this->status_code = $status_code;

@@ -2,6 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
+use Framework\App\App;
 use Framework\Kernel\HttpKernel;
 use Framework\Request\HttpRequest;
 use Framework\Response\Http200Response;
@@ -17,14 +18,26 @@ class KernelTest extends TestCase
     public function testHandle()
     {
         // Arrange
-        $server_info = [];
-        $expected_value = 'GET';
-        $server_info['REQUEST_METHOD'] = $expected_value;
-        $request = new HttpRequest($server_info);
-        // Act
-        $response = $this->sut->handle($request);
+        // Instanciate the App
+        $this->sut_config = [
+            'debug' => false,
+        ];
+        $router_mock = Mockery::mock('\Framework\Router\Router')
+                              ->makePartial();
+        $request_mock = Mockery::mock('\Framework\Request\HttpRequest');
+        $response_mock = Mockery::mock('\Framework\Response\Http200Response');
+        $this->sut_app = new App(
+            $this->sut_config, $this->sut, $router_mock
+        );
+        App::setInstance($this->sut_app);
         // Assert
-        $this->assertInstanceOf(Http200Response::class, $response);
+        $router_mock->shouldReceive('resolve')
+                    ->once()
+                    ->andReturn($response_mock);
+        // Act
+        $retrieved = $this->sut->handle($request_mock);
+        // Assert
+        $this->assertSame($response_mock, $retrieved);
     }
 
     public function testTerminate()

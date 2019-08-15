@@ -11,28 +11,17 @@ use Framework\Router\RouteInterface;
 
 class HttpKernel implements KernelInterface
 {
-    public function handle(RequestInterface $request) : ResponseInterface
+    public function bootstrap() : void
     {
-        // TODO: fixed test response
-        $controller_name = 'HelloWorld';
-        $method = 'get';
-        $payload = [$request, 'This is a Test!'];
-        
-        // Dispatch to the controller
-        $response = $this->dispatch($controller_name, $method, $payload);
-
-        // Return the response
-        return $response;
+        // Bootstrap the kernel
     }
 
-    protected function dispatch($controller, $method, $payload)
+    public function handle(RequestInterface $request) : ResponseInterface
     {
-        $base_controller_namespace = App::config()['controllers']['base_namespace'];
-        $full_qualified_controller = $base_controller_namespace.'\\'.$controller;
-        $response = call_user_func_array(
-            Array($full_qualified_controller, $method),
-            $payload
-        );
+        // Dispatch to the router
+        $response = App::router()->resolve($request);
+
+        // Return the response
         return $response;
     }
 

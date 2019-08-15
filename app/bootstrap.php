@@ -2,6 +2,7 @@
 
 use Framework\App\App;
 use Framework\Kernel\HttpKernel;
+use Framework\Router\Router;
 
 
 // Instanciate DotEnv
@@ -20,9 +21,10 @@ $config = require_once __DIR__.'/config.php';
 
 // Create dependencies for the application
 $kernel = new HttpKernel();
+$router = new Router();
 
 // Create a new instance of the application
-$app = new App($kernel, $config);
+$app = new App($config, $kernel, $router);
 
 // Return the instance to the caller script
 return $app;

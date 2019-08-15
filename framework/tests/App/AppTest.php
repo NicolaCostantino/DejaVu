@@ -6,6 +6,7 @@ use Framework\App\App;
 use Framework\App\AppException;
 use Framework\Kernel\HttpKernel;
 use Framework\Request\HttpRequest;
+use Framework\Router\Router;
 
 class AppTest extends TestCase
 {
@@ -21,8 +22,10 @@ class AppTest extends TestCase
             ],
         ];
         $this->sut_kernel = new HttpKernel();
-        $this->sut_router = null;
-        $this->sut = new App($this->sut_kernel, $this->sut_config);
+        $this->sut_router = new Router();
+        $this->sut = new App(
+            $this->sut_config, $this->sut_kernel, $this->sut_router
+        );
     }
 
     public function testGetInstance()
@@ -39,7 +42,11 @@ class AppTest extends TestCase
         // Arrange
         $sut1 = App::getInstance();
         // Act
-        App::setInstance(new App($this->sut_kernel, $this->sut_config));
+        App::setInstance(
+            new App(
+                $this->sut_config, $this->sut_kernel, $this->sut_router
+            )
+        );
         $sut2 = App::getInstance();
         // Assert
         $this->assertNotSame($sut2, $sut1);
@@ -127,17 +134,24 @@ class AppTest extends TestCase
     public function testHandle()
     {
         // Arrange
-        $request_mock = Mockery::mock('\Framework\Request\RequestInterface');
-        $kernel_mock = Mockery::mock('\Framework\Kernel\KernelInterface');
-        $response_mock = Mockery::mock('\Framework\Response\ResponseInterface');
-        App::setInstance(new App($kernel_mock, $this->sut_config));
+        $request_mock = Mockery::mock('\Framework\Request\RequestInterface')
+                               ->makePartial();
+        $kernel_mock = Mockery::mock('\Framework\Kernel\KernelInterface')
+                              ->makePartial();
+        $response_mock = Mockery::mock('\Framework\Response\Http200Response')
+                                ->makePartial();
         // Assert
+        $kernel_mock->shouldReceive('bootstrap')
+                    ->once();
+        App::setInstance(
+            new App($this->sut_config, $kernel_mock, $this->sut_router)
+        );
         $kernel_mock->shouldReceive('handle')
                     ->once()
                     ->with($request_mock)
                     ->andReturn($response_mock);
         $response_mock->shouldReceive('send')
-                    ->once();
+                      ->once();
         $kernel_mock->shouldReceive('terminate')
                     ->once();
         // Act

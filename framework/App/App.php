@@ -6,6 +6,7 @@ use Framework\App\AppException;
 use Framework\App\AppInterface;
 use Framework\Kernel\KernelInterface;
 use Framework\Request\RequestInterface;
+use Framework\Router\RouterInterface;
 
 class App implements AppInterface
 {
@@ -16,15 +17,19 @@ class App implements AppInterface
     protected static $instance = NULL;
     protected $registry = NULL;
 
-    public function __construct(KernelInterface $kernel, Array $config)
+    public function __construct(Array $config, KernelInterface $kernel, RouterInterface $router)
     {
         static::$instance = $this;
 
         // Instanciating and populating the registry
         $this->registry = [];
-        $this->set(static::KEY_KERNEL, $kernel);
         $this->set(static::KEY_CONFIG, $config);
-        $this->set(static::KEY_ROUTER, null);
+        // Set the kernel and bootstrap it
+        $this->set(static::KEY_KERNEL, $kernel);
+        static::kernel()->bootstrap();
+        // Set the router and bootstrap it
+        $this->set(static::KEY_ROUTER, $router);
+        static::router()->bootstrap();
     }
 
     public static function getInstance() : ?App
@@ -32,12 +37,12 @@ class App implements AppInterface
         return static::$instance;
     }
 
-    public static function setInstance(App $instance=null)
+    public static function setInstance(App $instance=null) : void
     {
         static::$instance = $instance;
     }
 
-    public static function config()
+    public static function config() : Array
     {
         if (!static::getInstance()) {
             throw new AppException("Application not initialized!");
@@ -45,7 +50,7 @@ class App implements AppInterface
         return static::getInstance()->get(static::KEY_CONFIG);
     }
 
-    public static function kernel()
+    public static function kernel() : KernelInterface
     {
         if (!static::getInstance()) {
             throw new AppException("Application not initialized!");
@@ -53,7 +58,7 @@ class App implements AppInterface
         return static::getInstance()->get(static::KEY_KERNEL);
     }
 
-    public static function router()
+    public static function router() : RouterInterface
     {
         if (!static::getInstance()) {
             throw new AppException("Application not initialized!");

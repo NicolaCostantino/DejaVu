@@ -2,6 +2,7 @@
 
 namespace Framework\Router;
 
+use Framework\Request\RequestInterface;
 use Framework\Router\RouteInterface;
 
 class Route implements RouteInterface
@@ -41,5 +42,11 @@ class Route implements RouteInterface
     public function getController() : String
     {
         return $this->controller;
+    }
+
+    public function matchesRequest(RequestInterface $request) : Bool
+    {
+        // TODO: Improve with checks
+        return $request->getUri() == $this->getUri();
     }
 }

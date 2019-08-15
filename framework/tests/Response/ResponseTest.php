@@ -8,6 +8,20 @@ class HttpResponseTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    public function testConstructor()
+    {
+        // Arrange
+        $expected = 'TestContent';
+        // Act
+        $sut = new HttpResponse($expected);
+        $refl_sut = new ReflectionObject($sut);
+        $sut_property = $refl_sut->getProperty('content');
+        $sut_property->setAccessible(true);
+        $retrieved = $sut_property->getValue($sut);
+        // Assert
+        $this->assertSame($expected, $retrieved);
+    }
+
     public function testSetStatusCode()
     {
         // Arrange

@@ -9,15 +9,12 @@ use Framework\Response\Http200Response;
 
 class HelloWorld extends BaseController
 {
-    public static function get(RequestInterface $request, $parameter) : ResponseInterface
+    public static function get(RequestInterface $request, $parameter='Default') : ResponseInterface
     {
-        $response = new Http200Response();
-
-        // TODO: Mocked for test
         $controller_context = 'Hello, World!';
         $content = $controller_context.' '.$parameter;
         
-        $response->setContent($content);
+        $response = new Http200Response($content);
         // Return the response
         return $response;
     }
