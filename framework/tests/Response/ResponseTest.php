@@ -22,6 +22,22 @@ class HttpResponseTest extends TestCase
         $this->assertSame($expected, $retrieved);
     }
 
+    public function testGetStatusCode()
+    {
+        // Arrange
+        $status_code = '200';
+        $sut = new HttpResponse();
+        $refl_sut = new ReflectionObject($sut);
+        $sut_property = $refl_sut->getProperty('status_code');
+        $sut_property->setAccessible(true);
+        $sut_property->setValue($sut, $status_code);
+        // Act
+        $retrieved = $sut->getStatusCode();
+        // Assert
+        $this->assertSame($status_code, $retrieved);
+
+    }
+
     public function testSetStatusCode()
     {
         // Arrange
@@ -37,6 +53,24 @@ class HttpResponseTest extends TestCase
         $this->assertSame($status_code, $retrieved);
     }
 
+    public function testGetHeaders()
+    {
+        // Arrange
+        $headers = [
+            'test_header',
+        ];
+        $sut = new HttpResponse();
+        $refl_sut = new ReflectionObject($sut);
+        $sut_property = $refl_sut->getProperty('headers');
+        $sut_property->setAccessible(true);
+        $sut_property->setValue($sut, $headers);
+        // Act
+        $retrieved = $sut->getHeaders();
+        // Assert
+        $this->assertSame($headers, $retrieved);
+
+    }
+
     public function testSetHeaders()
     {
         // Arrange
@@ -50,6 +84,22 @@ class HttpResponseTest extends TestCase
         $retrieved = $sut_property->getValue($sut);
         // Assert
         $this->assertSame($headers, $retrieved);
+    }
+
+    public function testGetContent()
+    {
+        // Arrange
+        $content = 'test_content';
+        $sut = new HttpResponse();
+        $refl_sut = new ReflectionObject($sut);
+        $sut_property = $refl_sut->getProperty('content');
+        $sut_property->setAccessible(true);
+        $sut_property->setValue($sut, $content);
+        // Act
+        $retrieved = $sut->getContent();
+        // Assert
+        $this->assertSame($content, $retrieved);
+
     }
 
     public function testSetContent()

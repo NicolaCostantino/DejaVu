@@ -15,29 +15,44 @@ class RouterTest extends TestCase
 
     protected function setUp() : void
     {
+        // Mocks
+        $this->route_mock = Mockery::mock('\Framework\Router\Route')
+                                   ->makePartial();
+        $this->request_mock = Mockery::mock('\Framework\Request\HttpRequest')
+                                     ->makePartial();
+        // Instances and configurations
+        $this->sut_config = [
+            'debug' => false,
+            'controllers' => [
+                'base_namespace' => 'App\Controller',
+            ],
+            'routes' => [
+                'default_pattern' => '[A-Za-z0-9]+',
+                'default_parameter_value' => NULL,
+            ],
+        ];
+        $this->sut_kernel = new HttpKernel();
         // Instanciate the Router
-        $this->router_sut = new Router();
-        $this->refl_sut = new ReflectionObject($this->router_sut);
+        $this->sut_router = new Router();
+        $this->refl_sut = new ReflectionObject($this->sut_router);
+        $this->sut_app = App::setInstance(
+            new App(
+                $this->sut_config, $this->sut_kernel, $this->sut_router
+            )
+        );
     }
 
     public function testBootstrap()
     {
         // Arrange
         // Instanciate the App without configuration for routes loading
-        $this->sut_config = [
-            'debug' => false,
-            'controllers' => [
-                'base_namespace' => 'App\Controller',
-            ],
-        ];
-        $this->sut_kernel = new HttpKernel();
         $router_mock = Mockery::mock('\Framework\Router\Router')
                               ->makePartial()
                               ->shouldAllowMockingProtectedMethods();
         $refl_sut = new ReflectionObject($router_mock);
         $sut_property = $refl_sut->getProperty('routes');
         $sut_property->setAccessible(true);
-        $previous_value = $sut_property->getValue($this->router_sut);
+        $previous_value = $sut_property->getValue($this->sut_router);
         $router_mock->shouldReceive('bootstrap')
                     ->once();
         // Act
@@ -47,7 +62,7 @@ class RouterTest extends TestCase
             )
         );
         // Assert
-        $current_value = $sut_property->getValue($this->router_sut);
+        $current_value = $sut_property->getValue($this->sut_router);
         $this->assertSame($previous_value, $current_value);
     }
 
@@ -63,7 +78,7 @@ class RouterTest extends TestCase
         $router_mock->shouldReceive('routeCreator')
                     ->andReturn($route_mock);
         // Assert
-        $route_mock->shouldReceive('setUri')
+        $route_mock->shouldReceive('setPattern')
                    ->once();
         $route_mock->shouldReceive('setMethod')
                    ->once();
@@ -82,11 +97,11 @@ class RouterTest extends TestCase
         $sut_property = $this->refl_sut->getProperty('routes');
         $sut_property->setAccessible(true);
         // Act
-        $retrieved = $this->router_sut->get($uri, $controller);
-        $internal = $sut_property->getValue($this->router_sut)['get'][0];
+        $retrieved = $this->sut_router->get($uri, $controller);
+        $internal = $sut_property->getValue($this->sut_router)['get'][0];
         // Assert
-        $this->assertSame($uri, $retrieved->getUri());
-        $this->assertSame($uri, $internal->getUri());
+        $this->assertSame($uri, $retrieved->getPattern());
+        $this->assertSame($uri, $internal->getPattern());
         $this->assertSame($method, $retrieved->getMethod());
         $this->assertSame($method, $internal->getMethod());
         $this->assertSame($controller, $retrieved->getController());
@@ -151,7 +166,7 @@ class RouterTest extends TestCase
         $sut_property->setAccessible(true);
         // Act
         $retrieved = $sut_property->invokeArgs(
-            $this->router_sut,
+            $this->sut_router,
             array()
         );
         // Assert
@@ -173,10 +188,10 @@ class RouterTest extends TestCase
         $sut_property->setAccessible(true);
         // Register the route
         $controller = 'TestController';
-        $retrieved = $this->router_sut->get($uri, $controller);
+        $retrieved = $this->sut_router->get($uri, $controller);
         // Act
         $found_route = $sut_property->invokeArgs(
-            $this->router_sut,
+            $this->sut_router,
             array($request)
         );
         // Assert
@@ -191,7 +206,7 @@ class RouterTest extends TestCase
         $sut_property->setAccessible(true);
         // Act
         $retrieved = $sut_property->invokeArgs(
-            $this->router_sut,
+            $this->sut_router,
             array($request)
         );
         // Assert
@@ -218,7 +233,11 @@ class RouterTest extends TestCase
         $request_mock->shouldReceive('getMethod')
                      ->once()
                      ->andReturn($method);
+        $route_mock->shouldReceive('getParameters')
+                   ->once();
         $router_mock->shouldReceive('resolveController')
+                    ->once();
+        $router_mock->shouldReceive('preparePayload')
                     ->once();
         $router_mock->shouldReceive('callController')
                     ->once();
@@ -231,20 +250,6 @@ class RouterTest extends TestCase
     public function testResolveController()
     {
         // Arrange
-        // Instanciate the App
-        $this->sut_config = [
-            'debug' => false,
-            'controllers' => [
-                'base_namespace' => 'App\Controller',
-            ],
-        ];
-        $this->sut_kernel = new HttpKernel();
-        $this->sut_router = new Router();
-        $this->sut_app = App::setInstance(
-            new App(
-                $this->sut_config, $this->sut_kernel, $this->sut_router
-            )
-        );
         $controller_name = 'TestController';
         $method = 'get';
         $base_namespace = App::config()['controllers']['base_namespace'];
@@ -254,10 +259,122 @@ class RouterTest extends TestCase
         $expected = array($full_qualified_controller, $method);
         // Act
         $retrieved = $sut_property->invokeArgs(
-            $this->router_sut,
+            $this->sut_router,
             array($controller_name, $method)
         );
         // Assert
         $this->assertSame($expected, $retrieved);
+    }
+
+    public function testPreparePayload1()
+    {
+        // Arrange
+        $this->route_mock->shouldReceive('getParameters')
+                         ->once()
+                         ->andReturn(
+                             [
+                                 'foo' => 'foo_value',
+                                 'bar' => 'bar_value',
+                                 'baz' => 'baz_value',
+                             ]
+                         );
+        $callback_array = [
+            'Framework\Test\Router\Helpers\HelperController',
+            'testMethod1',
+        ];
+        $sut_method = $this->refl_sut->getMethod('preparePayload');
+        $sut_method->setAccessible(true);
+        $expected = [
+            'request' => $this->request_mock,
+            'bar' => 'bar_value',
+        ];
+        // Act
+        $retrieved = $sut_method->invokeArgs(
+            $this->sut_router,
+            array($this->request_mock, $this->route_mock, $callback_array)
+        );
+        // Assert
+        $this->assertSame($expected, $retrieved);
+    }
+
+    public function testPreparePayload2()
+    {
+        // Arrange
+        $this->route_mock->shouldReceive('getParameters')
+                         ->once()
+                         ->andReturn(
+                             [
+                                 'foo' => 'foo_value',
+                                 'baz' => 'baz_value',
+                             ]
+                         );
+        $callback_array = [
+            'Framework\Test\Router\Helpers\HelperController',
+            'testMethod1',
+        ];
+        $sut_method = $this->refl_sut->getMethod('preparePayload');
+        $sut_method->setAccessible(true);
+        $expected = [
+            'request' => $this->request_mock,
+            'bar' => NULL,
+        ];
+        // Act
+        $retrieved = $sut_method->invokeArgs(
+            $this->sut_router,
+            array($this->request_mock, $this->route_mock, $callback_array)
+        );
+        // Assert
+        $this->assertSame($expected, $retrieved);
+    }
+
+    public function testCallController()
+    {
+        // Arrange
+        $callback_array = [
+            'Framework\Test\Router\Helpers\HelperController',
+            'testMethod1',
+        ];
+        $payload = [
+            'request' => $this->request_mock,
+            'bar' => NULL,
+        ];
+        $sut_method = $this->refl_sut->getMethod('callController');
+        $sut_method->setAccessible(true);
+        $expected = 'testMethod1';
+        // Act
+        $retrieved = $sut_method->invokeArgs(
+            $this->sut_router,
+            array($callback_array, $payload)
+        );
+        // Assert
+        $this->assertSame($expected, $retrieved->getContent());
+    }
+
+    public function testCallControllerParameters()
+    {
+        // Arrange
+        $callback_array = [
+            'Framework\Test\Router\Helpers\HelperController',
+            'testMethod2',
+        ];
+        $payload = [
+            'request' => $this->request_mock,
+            'foo' => NULL,
+            'bar' => 'test',
+        ];
+        $sut_method = $this->refl_sut->getMethod('callController');
+        $sut_method->setAccessible(true);
+        $expected = [
+            $payload['request'],
+            $payload['foo'],
+            $payload['bar'],
+        ];
+        // Act
+        $retrieved = $sut_method->invokeArgs(
+            $this->sut_router,
+            array($callback_array, $payload)
+        );
+        // Assert
+        $this->assertSame($expected, $retrieved->getContent());
     }
 }

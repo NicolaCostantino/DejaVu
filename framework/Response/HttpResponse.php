@@ -15,22 +15,37 @@ class HttpResponse implements ResponseInterface
         $this->setContent($content);
     }
 
-    public function setStatusCode(String $status_code) : void
+    public function getStatusCode() : String
+    {
+        return $this->status_code;
+    }
+
+    public function setStatusCode(String $status_code) : Void
     {
         $this->status_code = $status_code;
     }
-    
-    public function setHeaders(Array $headers) : void
+
+    public function getHeaders() : Array
+    {
+        return $this->headers;
+    }
+
+    public function setHeaders(Array $headers) : Void
     {
         $this->headers = $headers;
     }
-    
-    public function setContent($content) : void
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setContent($content) : Void
     {
         $this->content = $content;
     }
 
-    public function send() : void
+    public function send() : Void
     {
         // Send headers
         $this->sendHeaders();
@@ -38,7 +53,7 @@ class HttpResponse implements ResponseInterface
         $this->sendContent();
     }
     
-    protected function sendHeaders() : void
+    protected function sendHeaders() : Void
     {
         // Send headers with status code, if not already sent
         // Testing: trivial, built around globals
@@ -49,7 +64,7 @@ class HttpResponse implements ResponseInterface
         }
     } // @codeCoverageIgnore
 
-    protected function sendContent() : void
+    protected function sendContent() : Void
     {
         // Testing: trivial, built around globals
         echo $this->content; // @codeCoverageIgnore

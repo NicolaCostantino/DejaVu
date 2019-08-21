@@ -12,7 +12,8 @@ class HelloWorldTest extends TestCase
         // Arrange
         $request_mock = Mockery::mock('\Framework\Request\HttpRequest');
         // Act
-        $retrieved = HelloWorld::get($request_mock);
+        $controller = new HelloWorld();
+        $retrieved = $controller->get($request_mock, '', '');
         // Assert
         $this->assertInstanceOf(Http200Response::class, $retrieved);
     }

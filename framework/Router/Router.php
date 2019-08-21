@@ -30,7 +30,7 @@ class Router implements RouterInterface
         // Create the Route
         $route = $this->routeCreator();
         $route->setMethod($method);
-        $route->setUri($uri);
+        $route->setPattern($uri);
         $route->setController($controller);
         // Register the Route
         $this->routes[$method][] = $route;
@@ -80,13 +80,12 @@ class Router implements RouterInterface
     {
         $controller = $route->getController();
         $method = $request->getMethod();
-        // TODO: Get the payload from route
-        // Passing request and arguments to the controller
-        $payload = [
-            $request,
-        ];
-        // Call the controller with payload
+        $parameters = $route->getParameters();
+        // Resolve the controller
         $callback_array = $this->resolveController($controller, $method);
+        // Passing request and arguments to the controller
+        $payload = $this->preparePayload($request, $route, $callback_array);
+        // Call the controller with payload
         $response = $this->callController($callback_array, $payload);
         return $response;
     }
@@ -99,9 +98,35 @@ class Router implements RouterInterface
         return $callback_array;
     }
 
+    protected function preparePayload(RequestInterface $request, RouteInterface $route, Array $callback_array) : Array
+    {
+        // Get extracted parameters
+        $parameters = $route->getParameters();
+        // Passing request and arguments to the controller
+        $available_values = array_merge(['request' => $request,], $parameters);
+        // (Advanced) Clean and sanitize parameter values
+        // Order and fill the parameters as required by the controller
+        $reflection_method = new \ReflectionMethod(
+            $callback_array[0], $callback_array[1]
+        );
+        $payload = [];
+        foreach ($reflection_method->getParameters() as $parameter) {
+            if (isset($available_values[$parameter->name])) {
+                $payload[$parameter->name] = $available_values[$parameter->name];
+            } else {
+                // Default for missing values
+                $default_value = App::config()['routes']['default_parameter_value'];
+                $payload[$parameter->name] = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : $default_value;
+            }
+        }
+        return $payload;
+    }
+
     protected function callController(Array $callback_array, Array $payload) : ResponseInterface
     {
-        $response = call_user_func_array($callback_array, $payload);  // @codeCoverageIgnore
-        return $response;  // @codeCoverageIgnore
+        $controller_instance = new $callback_array[0];
+        $callback_array[0] = $controller_instance;
+        $response = call_user_func_array($callback_array, $payload);
+        return $response;
     }
 }

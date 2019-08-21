@@ -9,10 +9,10 @@ use Framework\Response\Http200Response;
 
 class HelloWorld extends BaseController
 {
-    public static function get(RequestInterface $request, $parameter='Default') : ResponseInterface
+    public function get(RequestInterface $request, $bar, $folk, $baz='Default') : ResponseInterface
     {
         $controller_context = 'Hello, World!';
-        $content = $controller_context.' '.$parameter;
+        $content = $controller_context.' '.$bar.' '.$baz;
         
         $response = new Http200Response($content);
         // Return the response

@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2019-08-26
+### Added
+- Add parametric routes, full test coverage
+
+## [0.2.0] - 2019-08-15
+### Added
+- Add static route registration from file, bootstrappable interface for services, full test coverage
+
+## [0.1.2] - 2019-08-12
+### Added
+- Add GET route registration, full coverage
+
 ## [0.1.1] - 2019-08-07
 ### Added
 - Add Travis CI and Codecov integration

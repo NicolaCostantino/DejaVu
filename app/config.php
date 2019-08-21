@@ -14,6 +14,10 @@ return [
         'files' => [
             __DIR__.'/routes.php',
         ],
+        // Default patterns for routes
+        'default_pattern' => '[A-Za-z0-9]+',
+        // Default value for missing parameters
+        'default_parameter_value' => NULL,
     ],
 
     /*
