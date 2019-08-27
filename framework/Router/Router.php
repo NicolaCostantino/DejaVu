@@ -40,7 +40,6 @@ class Router implements RouterInterface
 
     public function resolve(RequestInterface $request) : ResponseInterface
     {
-        // TODO: Handle 500 error (on find and dispatch)
         $route = $this->findRoute($request);
         if (! $route) {
             // Return Response for route not found
@@ -72,8 +71,13 @@ class Router implements RouterInterface
 
     protected function handleRouteNotFound(RequestInterface $request) : ResponseInterface
     {
-        // TODO: improve response
-        return new Http404Response('Not Found!');
+        $content = '404 - Not found';
+        if (isset(App::config()['template_engine']['template_404'])) {
+            $template = App::config()['template_engine']['template_404'];
+            $context = compact('request');
+            $content = App::template_engine()->render($template, $context);
+        }
+        return new Http404Response($content);
     }
 
     protected function dispatch(RequestInterface $request, RouteInterface $route) : ResponseInterface

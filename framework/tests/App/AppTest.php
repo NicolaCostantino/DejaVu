@@ -7,6 +7,7 @@ use Framework\App\AppException;
 use Framework\Kernel\HttpKernel;
 use Framework\Request\HttpRequest;
 use Framework\Router\Router;
+use Framework\TemplateEngine\TwigTemplateEngine;
 
 class AppTest extends TestCase
 {
@@ -23,9 +24,14 @@ class AppTest extends TestCase
         ];
         $this->sut_kernel = new HttpKernel();
         $this->sut_router = new Router();
+        $this->sut_template_engine = new TwigTemplateEngine();
         $this->sut = new App(
-            $this->sut_config, $this->sut_kernel, $this->sut_router
+            $this->sut_config,
+            $this->sut_kernel,
+            $this->sut_router,
+            $this->sut_template_engine
         );
+        App::setInstance($this->sut);
     }
 
     public function testGetInstance()
@@ -44,7 +50,10 @@ class AppTest extends TestCase
         // Act
         App::setInstance(
             new App(
-                $this->sut_config, $this->sut_kernel, $this->sut_router
+                $this->sut_config,
+                $this->sut_kernel,
+                $this->sut_router,
+                $this->sut_template_engine
             )
         );
         $sut2 = App::getInstance();
@@ -109,6 +118,25 @@ class AppTest extends TestCase
         $router = App::router();
     } // @codeCoverageIgnore
 
+    public function testTemplateEngineProxy()
+    {
+        // Arrange
+        // Act
+        $template_engine = App::template_engine();
+        // Assert
+        $this->assertSame($this->sut_template_engine, $template_engine);
+    }
+
+    public function testTemplateEngineProxyOnNull()
+    {
+        // Arrange
+        App::setInstance();
+        // Assert
+        $this->expectException(AppException::class);
+        // Act
+        $template_engine = App::template_engine();
+    } // @codeCoverageIgnore
+
     public function testSetGetCycle()
     {
         // Arrange
@@ -144,7 +172,12 @@ class AppTest extends TestCase
         $kernel_mock->shouldReceive('bootstrap')
                     ->once();
         App::setInstance(
-            new App($this->sut_config, $kernel_mock, $this->sut_router)
+            new App(
+                $this->sut_config,
+                $kernel_mock,
+                $this->sut_router,
+                $this->sut_template_engine
+            )
         );
         $kernel_mock->shouldReceive('handle')
                     ->once()

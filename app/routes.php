@@ -3,6 +3,8 @@
 use Framework\App\App;
 
 // Define routes here
+App::router()->get('^/$', 'HelloWorld');
+
 App::router()->get('/foo/bar/baz', 'HelloWorld');
 
 App::router()->get('^/helloworld$', 'HelloWorld');

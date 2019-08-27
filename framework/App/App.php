@@ -7,18 +7,24 @@ use Framework\App\AppInterface;
 use Framework\Kernel\KernelInterface;
 use Framework\Request\RequestInterface;
 use Framework\Router\RouterInterface;
+use Framework\TemplateEngine\TemplateEngineInterface;
 
 class App implements AppInterface
 {
     const KEY_KERNEL = 'APP_KERNEL';
     const KEY_CONFIG = 'APP_CONFIG';
     const KEY_ROUTER = 'APP_ROUTER';
+    const KEY_TEMPLATE_ENGINE = 'APP_TEMPLATE_ENGINE';
 
     protected static $instance = NULL;
     protected $registry = NULL;
 
-    public function __construct(Array $config, KernelInterface $kernel, RouterInterface $router)
-    {
+    public function __construct(Array $config,
+        KernelInterface $kernel,
+        RouterInterface $router,
+        TemplateEngineInterface $template_engine
+    ) {
+        // Registering the App instance
         static::$instance = $this;
 
         // Instanciating and populating the registry
@@ -30,6 +36,9 @@ class App implements AppInterface
         // Set the router and bootstrap it
         $this->set(static::KEY_ROUTER, $router);
         static::router()->bootstrap();
+        // Set the template engine and bootstrap it
+        $this->set(static::KEY_TEMPLATE_ENGINE, $template_engine);
+        static::template_engine()->bootstrap();
     }
 
     public static function getInstance() : ?App
@@ -64,6 +73,14 @@ class App implements AppInterface
             throw new AppException("Application not initialized!");
         }
         return static::getInstance()->get(static::KEY_ROUTER);
+    }
+
+    public static function template_engine() : TemplateEngineInterface
+    {
+        if (!static::getInstance()) {
+            throw new AppException("Application not initialized!");
+        }
+        return static::getInstance()->get(static::KEY_TEMPLATE_ENGINE);
     }
 
     public function set($key, $value)

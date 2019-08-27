@@ -6,6 +6,7 @@ use Framework\App\App;
 use Framework\Kernel\HttpKernel;
 use Framework\Router\Router;
 use Framework\Router\Route;
+use Framework\TemplateEngine\TwigTemplateEngine;
 
 class RouteTest extends TestCase
 {
@@ -32,6 +33,7 @@ class RouteTest extends TestCase
         ];
         $this->sut_kernel = new HttpKernel();
         $this->sut_router = new Router();
+        $this->sut_template_engine = new TwigTemplateEngine();
         // Instanciate the Router
         $this->sut = new Route();
         $this->refl_sut = new ReflectionObject($this->sut);
@@ -42,11 +44,13 @@ class RouteTest extends TestCase
         $this->sut_conditions->setAccessible(true);
         $this->sut_regex = $this->refl_sut->getProperty('regex');
         $this->sut_regex->setAccessible(true);
-        $this->sut_app = App::setInstance(
-            new App(
-                $this->sut_config, $this->sut_kernel, $this->sut_router
-            )
+        $this->sut_app = new App(
+            $this->sut_config,
+            $this->sut_kernel,
+            $this->sut_router,
+            $this->sut_template_engine
         );
+        App::setInstance($this->sut_app);
     }
 
     public function testSetPattern()

@@ -27,4 +27,16 @@ return [
         // Used for controller loading
         'base_namespace' => 'App\Controller',
     ],
+
+    /*
+     * Template Engine
+     */
+    'template_engine' => [
+        // Path to templates
+        'template_path' => __DIR__.'/templates',
+        // Template engine-specific options
+        'options' => [],
+        // Template engine-specific options
+        'template_404' => '404.html',
+    ]
 ];

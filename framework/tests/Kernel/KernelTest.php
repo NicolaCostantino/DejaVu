@@ -6,6 +6,7 @@ use Framework\App\App;
 use Framework\Kernel\HttpKernel;
 use Framework\Request\HttpRequest;
 use Framework\Response\Http200Response;
+use Framework\TemplateEngine\TwigTemplateEngine;
 
 class KernelTest extends TestCase
 {
@@ -22,12 +23,16 @@ class KernelTest extends TestCase
         $this->sut_config = [
             'debug' => false,
         ];
+        $this->sut_template_engine = new TwigTemplateEngine();
         $router_mock = Mockery::mock('\Framework\Router\Router')
                               ->makePartial();
         $request_mock = Mockery::mock('\Framework\Request\HttpRequest');
         $response_mock = Mockery::mock('\Framework\Response\Http200Response');
         $this->sut_app = new App(
-            $this->sut_config, $this->sut, $router_mock
+            $this->sut_config,
+            $this->sut,
+            $router_mock,
+            $this->sut_template_engine
         );
         App::setInstance($this->sut_app);
         // Assert

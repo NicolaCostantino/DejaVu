@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Hello, World!{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        .header {
+            color: teal;
+        }
+        .paragraph {
+            color: cadetblue;
+        }
+        .value {
+            color: #336699;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1 class="header">Hello, World!</h1>
+    <div class="paragraph">
+        <h3>Parameters from context:</h3>
+        <p class="paragraph">
+            Element from template: <span class="value">Hello, from template!</span>
+        </p>
+        <p class="paragraph">
+            Element from controller: <span class="value">{{ controller_context }}</span>
+        </p>
+    </div>
+    <div class="paragraph">
+        <h3>Parameters from URL:</h3>
+        <ul>
+            {% for parameter, value in extra %}
+                <li>
+                    Parameter: <span class="value">{{ parameter }}</span>, Value: <span class="value">{{ value }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

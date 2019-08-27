@@ -6,17 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2019-08-28
+### Added
+- Add template engine support
+- Add Twig template engine
+- Add 404 page
+- Full test coverage
+
 ## [0.3.0] - 2019-08-26
 ### Added
-- Add parametric routes, full test coverage
+- Add parametric routes
+- Full test coverage
 
 ## [0.2.0] - 2019-08-15
 ### Added
-- Add static route registration from file, bootstrappable interface for services, full test coverage
+- Add static route registration from file, bootstrappable interface for services
+- Full test coverage
 
 ## [0.1.2] - 2019-08-12
 ### Added
-- Add GET route registration, full coverage
+- Add GET route registration
+- Full test coverage
 
 ## [0.1.1] - 2019-08-07
 ### Added

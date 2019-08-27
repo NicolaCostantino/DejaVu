@@ -11,11 +11,17 @@ class HelloWorld extends BaseController
 {
     public function get(RequestInterface $request, $bar, $folk, $baz='Default') : ResponseInterface
     {
-        $controller_context = 'Hello, World!';
-        $content = $controller_context.' '.$bar.' '.$baz;
-        
-        $response = new Http200Response($content);
+        $context = [
+            'controller_context' => 'Hello, from controller!',
+            'request' => $request,
+            'extra' => [
+                'bar' => $bar,
+                'folk' => $folk,
+                'baz' => $baz,
+            ],
+        ];
+
         // Return the response
-        return $response;
+        return $this->renderToResponse('hello_world.html', $context);
     }
 }

@@ -8,6 +8,7 @@ use Framework\Kernel\HttpKernel;
 use Framework\Request\HttpRequest;
 use Framework\Router\Router;
 use Framework\Router\Route;
+use Framework\TemplateEngine\TwigTemplateEngine;
 
 class RouterTest extends TestCase
 {
@@ -34,12 +35,15 @@ class RouterTest extends TestCase
         $this->sut_kernel = new HttpKernel();
         // Instanciate the Router
         $this->sut_router = new Router();
+        $this->sut_template_engine = new TwigTemplateEngine();
         $this->refl_sut = new ReflectionObject($this->sut_router);
-        $this->sut_app = App::setInstance(
-            new App(
-                $this->sut_config, $this->sut_kernel, $this->sut_router
-            )
+        $this->sut_app = new App(
+            $this->sut_config,
+            $this->sut_kernel,
+            $this->sut_router,
+            $this->sut_template_engine
         );
+        App::setInstance($this->sut_app);
     }
 
     public function testBootstrap()
@@ -56,11 +60,13 @@ class RouterTest extends TestCase
         $router_mock->shouldReceive('bootstrap')
                     ->once();
         // Act
-        $this->sut_app = App::setInstance(
-            new App(
-                $this->sut_config, $this->sut_kernel, $router_mock
-            )
+        $this->sut_app = new App(
+            $this->sut_config,
+            $this->sut_kernel,
+            $router_mock,
+            $this->sut_template_engine
         );
+        App::setInstance($this->sut_app);
         // Assert
         $current_value = $sut_property->getValue($this->sut_router);
         $this->assertSame($previous_value, $current_value);
@@ -202,6 +208,39 @@ class RouterTest extends TestCase
     {
         // Arrange
         $request = Mockery::mock('\Framework\Request\HttpRequest');
+        $sut_property = $this->refl_sut->getMethod('handleRouteNotFound');
+        $sut_property->setAccessible(true);
+        // Act
+        $retrieved = $sut_property->invokeArgs(
+            $this->sut_router,
+            array($request)
+        );
+        // Assert
+        $this->assertInstanceOf(Http404Response::class, $retrieved);
+    }
+
+    public function testHandleRouteNotFoundWithTemplate()
+    {
+        // Arrange
+        $this->sut_config = array_merge(
+            $this->sut_config,
+            [
+                'template_engine' => [
+                    'template_path' => __DIR__.'/../../../app/templates',
+                    'options' => [],
+                    'template_404' => '404.html',
+                ],
+            ]
+        );
+        $this->sut_app = new App(
+            $this->sut_config,
+            $this->sut_kernel,
+            $this->sut_router,
+            $this->sut_template_engine
+        );
+        App::setInstance($this->sut_app);
+        $request = Mockery::mock('\Framework\Request\HttpRequest')
+                          ->makePartial();
         $sut_property = $this->refl_sut->getMethod('handleRouteNotFound');
         $sut_property->setAccessible(true);
         // Act
