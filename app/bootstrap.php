@@ -7,7 +7,7 @@ use Framework\TemplateEngine\TwigTemplateEngine;
 
 
 // Instanciate DotEnv
-$dotenv = Dotenv\Dotenv::create(__DIR__.'/..');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/..');
 $dotenv->load();
 
 // DEBUG-only: Instanciate Whoops
