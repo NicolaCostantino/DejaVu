@@ -23,5 +23,10 @@
         "phpunit/phpunit": "^8.2",
         "filp/whoops": "^2.4",
         "mockery/mockery": "^1.2"
+    },
+    "config": {
+        "platform": {
+            "php": "^7.4"
+        }
     }
 }
