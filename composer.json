@@ -17,9 +17,15 @@
     },
     "require": {
         "vlucas/phpdotenv": "^4.1",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "hirak/prestissimo": "^0.3.10"
     },
     "require-dev": {
+        "php": ">=7.4",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-mbstring": "*",
+        "ext-zip": "*",
         "phpunit/phpunit": "^9.0",
         "filp/whoops": "^2.4",
         "mockery/mockery": "^1.2"
