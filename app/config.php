@@ -4,7 +4,7 @@ return [
     /*
      * Globals
      */
-    'debug' => getenv('APP_DEBUG', false),
+    'debug' => isset($_ENV['APP_DEBUG']) ? $_ENV['APP_DEBUG'] : false,
 
     /*
      * Routes

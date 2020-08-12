@@ -16,7 +16,7 @@
         ]
     },
     "require": {
-        "vlucas/phpdotenv": "^4.1",
+        "vlucas/phpdotenv": "^5",
         "twig/twig": "^3.0",
         "hirak/prestissimo": "^0.3.10"
     },

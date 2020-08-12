@@ -11,7 +11,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/..');
 $dotenv->load();
 
 // DEBUG-only: Instanciate Whoops
-if (getenv('APP_DEBUG')) {
+if ($_ENV['APP_DEBUG']) {
     $whoops = new \Whoops\Run;
     $whoops->prependHandler(new \Whoops\Handler\PrettyPageHandler);
     $whoops->register();
