@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24894b00d4de817d908b31a40f8ab593",
+    "content-hash": "98153c2284554daab583c26599e4356b",
     "packages": [
         {
             "name": "graham-campbell/result-type",
@@ -67,57 +67,6 @@
                 }
             ],
             "time": "2020-04-13T13:17:36+00:00"
-        },
-        {
-            "name": "hirak/prestissimo",
-            "version": "0.3.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hirak/prestissimo.git",
-                "reference": "fb6724d5ee81c96bebd2255175d8c364ac9301e3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hirak/prestissimo/zipball/fb6724d5ee81c96bebd2255175d8c364ac9301e3",
-                "reference": "fb6724d5ee81c96bebd2255175d8c364ac9301e3",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0.0",
-                "ext-curl": "*",
-                "php": "^5.3.2 || ^7.0"
-            },
-            "require-dev": {
-                "composer/composer": "1.0.0",
-                "phpunit/phpunit": "4.8.* || 5.7.* || ^6.3",
-                "squizlabs/php_codesniffer": "^2.5"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Hirak\\Prestissimo\\Plugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "Hirak\\Prestissimo\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Hiraku NAKANO",
-                    "email": "hiraku@tojiru.net"
-                }
-            ],
-            "description": "composer parallel install plugin",
-            "keywords": [
-                "install",
-                "parallel",
-                "speedup"
-            ],
-            "time": "2020-02-16T12:49:55+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -639,16 +588,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.8.0",
+            "version": "2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "fa50d9db1c0c2fae99cf988d27023effda5524a3"
+                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/fa50d9db1c0c2fae99cf988d27023effda5524a3",
-                "reference": "fa50d9db1c0c2fae99cf988d27023effda5524a3",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/307fb34a5ab697461ec4c9db865b20ff2fd40771",
+                "reference": "307fb34a5ab697461ec4c9db865b20ff2fd40771",
                 "shasum": ""
             },
             "require": {
@@ -696,7 +645,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2020-10-17T09:00:00+00:00"
+            "time": "2020-11-01T12:00:00+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -744,6 +693,58 @@
                 "test"
             ],
             "time": "2020-07-09T08:09:16+00:00"
+        },
+        {
+            "name": "hirak/prestissimo",
+            "version": "0.3.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hirak/prestissimo.git",
+                "reference": "fb6724d5ee81c96bebd2255175d8c364ac9301e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hirak/prestissimo/zipball/fb6724d5ee81c96bebd2255175d8c364ac9301e3",
+                "reference": "fb6724d5ee81c96bebd2255175d8c364ac9301e3",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0.0",
+                "ext-curl": "*",
+                "php": "^5.3.2 || ^7.0"
+            },
+            "require-dev": {
+                "composer/composer": "1.0.0",
+                "phpunit/phpunit": "4.8.* || 5.7.* || ^6.3",
+                "squizlabs/php_codesniffer": "^2.5"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Hirak\\Prestissimo\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hirak\\Prestissimo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hiraku NAKANO",
+                    "email": "hiraku@tojiru.net"
+                }
+            ],
+            "description": "composer parallel install plugin",
+            "keywords": [
+                "install",
+                "parallel",
+                "speedup"
+            ],
+            "abandoned": true,
+            "time": "2020-02-16T12:49:55+00:00"
         },
         {
             "name": "mockery/mockery",
