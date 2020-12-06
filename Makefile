@@ -31,7 +31,6 @@ server_dev:
 
 travis_before_install:
 	composer self-update
-	composer global require hirak/prestissimo
 	# Setup env file
 	cp .env.test .env
 

@@ -17,8 +17,7 @@
     },
     "require": {
         "vlucas/phpdotenv": "^5",
-        "twig/twig": "^3.0",
-        "hirak/prestissimo": "^0.3.10"
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "php": ">=7.4",
