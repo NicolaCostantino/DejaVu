@@ -25,7 +25,7 @@
         "ext-dom": "*",
         "ext-mbstring": "*",
         "ext-zip": "*",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^13.1",
         "filp/whoops": "^2.4",
         "mockery/mockery": "^1.2"
     }
