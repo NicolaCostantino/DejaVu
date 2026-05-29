@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/NicolaCostantino/DejaVu.svg?branch=master)](https://travis-ci.com/NicolaCostantino/DejaVu)
+[![Build Status](https://app.travis-ci.com/NicolaCostantino/DejaVu.svg?token=q9zwQuQU2XVLPWgs85rM&branch=master)](https://app.travis-ci.com/NicolaCostantino/DejaVu)
 [![codecov](https://codecov.io/gh/NicolaCostantino/DejaVu/branch/master/graph/badge.svg)](https://codecov.io/gh/NicolaCostantino/DejaVu)
 
 # DejaVu
